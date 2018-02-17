@@ -2,13 +2,14 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '',
+    'dsn' => 'pgsql:host=babar.elephantsql.com;dbname=rcexiegw',
+    'username' => 'rcexiegw',
+    'password' => 'k6cb2UnjShhPRKih-ZYGjnV7cGKJFCkK',
     'charset' => 'utf8',
-
-    // Schema cache options (for production environment)
-    //'enableSchemaCache' => true,
-    //'schemaCacheDuration' => 60,
-    //'schemaCache' => 'cache',
+    'schemaMap' => [
+        'pgsql'=> [
+            'class'=>'yii\db\pgsql\Schema',
+            'defaultSchema' => 'public' //specify your schema here
+        ]
+    ], // PostgreSQL
 ];
