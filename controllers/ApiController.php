@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\TblServicos;
 use Yii;
 use yii\web\Controller;
 use app\models\TblUsuarios;
@@ -23,8 +24,25 @@ class ApiController extends \yii\rest\Controller
         ];
     }
 
-    public function actionIndex()
-    {
+
+    /**
+     * @return array|static[]
+     * @throws \yii\base\InvalidConfigException
+     * Action responsável pelas requisições com solicitações à tabela de serviços
+     */
+    public function actionServicos(){
+
+        // Procedimentos para geração dos Models
+        // 1 - Acesse o Gii (Ex.: http://127.0.0.1/webservice-ifisio/web/gii
+        // 2 - Acesse a opção de geração de modelos
+        // 3 - Gere os modelos das tabelas restantes
+        // 4 - Adicione os modelos no topo do ApiController
+        // 5 - Criar actions restantes
+
+        // Modelo de JSON a ser enviado na carga da requisição
+        //{"servico":{"descricao":"A","nome":"B","preco":"12.00"}} //Para a requisição do tipo POST
+
+
         /*
         GET /users: list all users page by page;
         POST /users: create a new user;
@@ -34,47 +52,35 @@ class ApiController extends \yii\rest\Controller
         DELETE /users/123: delete the user 123;
         */
 
-        //$params = Yii::$app->request->getBodyParams();
-
-        /*
-        $newUser = new TblUsuarios();
-
-        $newUser->cpf = '08608273489';
-        $newUser->dataNascimento = date('Y-m-d');
-        $newUser->email = 'ronysilvati@live.com';
-        $newUser->nome = 'Rony';
-        $newUser->sobrenome = 'Silva';
-        $newUser->sexo = 'M';
-
-
-        if(!$newUser->save()){
-            echo '<pre>';
-            print_r($newUser->getErrors());
-        }
-        */
-
-        //$listaUser = TblUsuarios::findAll(['idUsuario'=>1]);
-
-        /*
         if(Yii::$app->request->isPost){
-            die("s");
+            $dadosServico = Yii::$app->request->getBodyParams();
+
+
+            if(is_array($dadosServico) && array_key_exists('servico',$dadosServico) && is_array($dadosServico['servico'])){
+                $newServico = new TblServicos();
+                $newServico->descricao = $dadosServico['descricao'];
+                $newServico->nome   = $dadosServico['nome'];
+                $newServico->Preco = $dadosServico['preco'];
+
+
+                if($newServico->save()){
+                    Yii::$app->response->statusCode = 201;
+                }
+                else{
+                    return $newServico->getErrors();
+                }
+            }
+
         }
-        */
+        else if(Yii::$app->request->isGet){
+            return TblServicos::findAll([]);
+        }
+        else if(Yii::$app->request->isDelete){
+            $idServico = Yii::$app->request->getBodyParams();
 
-        /*
-        $payload = Yii::$app->request->getBodyParams();
-
-        echo '<pre>';
-        print_r($payload);
-        die();
-        */
-
-        Yii::$app->response->statusCode = 201;
-
-        $json = array('nome'=>'Rony','email'=>'ronysilvati@Live.com');
-        return $json;
-        die("OK");
-
-
+            if(TblServicos::deleteAll(['idservico'=>$idServico]) !== false){
+                Yii::$app->response->statusCode = 201;
+            }
+        }
     }
 }
